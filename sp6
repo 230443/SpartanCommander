@@ -1,0 +1,24 @@
+#!/bin/bash -x
+Groups=$(groups)
+echo $Groups 
+printsp()
+{
+	cd $1
+	read &
+	ls -la $1 | awk 'NF>8{
+	printf substr($0,2,9)
+	printf " "
+	if($3 == "$USER") printf substr($1,2,3)
+	else if ( "$Groups" == "$4" )
+		printf substr($1,5,3)" "
+	else 
+		printf substr($1,8,3) 
+				
+	print " ", $5, substr($0,1,1), $9
+}' | column -t |less -N 
+	[[ ${REPLY} =~ ^[0-9]+$  ]] && echo $REPLY
+}
+
+printsp
+
+
