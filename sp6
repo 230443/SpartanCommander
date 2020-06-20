@@ -4,7 +4,7 @@ echo $Groups
 printsp()
 {
 	cd $1
-
+	lines=20
 	ls -la $1 | awk 'NF>8{
 	printf substr($0,2,9)
 	printf " "
@@ -14,16 +14,22 @@ printsp()
 	else 
 		printf substr($1,8,3) 
 				
-	print " ", $5, substr($0,1,1), $9
-}' | column -t |less -N &
+	print " ", $5, substr($0,1,1), $9}
+' | column -t |less -N &
 ID=$!
 while :
 do
-	read
-	[[ ${REPLY} =~ .*[0-9]  ]] && echo $REPLY && kill $ID 
+	read -n 4 -r
+	[[ ${REPLY} =~ .*[0-9]  ]] && Num=${REPLY##[^0-9]} && [ $Num -le $lines ] && kill $ID && break
 done
+echo $lines
 }
 
+open()
+{
+fname=$(ls -la | awk 'NR==$Num {print $9}')
+[ -f $fname ] && $($fname)
+}
 printsp
 
 
