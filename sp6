@@ -1,11 +1,11 @@
 #!/bin/bash -x
 Groups=$(groups)
-echo $Groups 
 printsp()
 {
 	cd $1
-	lines=20
-	ls -la $1 | awk 'NF>8{
+	lines=$(( $(ls -la | wc -l)-1 ))
+	echo $lines
+	ls -la $1 | awk 'NR>1{
 	printf substr($0,2,9)
 	printf " "
 	if($3 == "$USER") printf substr($1,2,3)
@@ -20,7 +20,7 @@ ID=$!
 while :
 do
 	read -n 4 -r
-	[[ ${REPLY} =~ .*[0-9]  ]] && Num=${REPLY##[^0-9]} && [ $Num -le $lines ] && kill $ID && break
+	[[ ${REPLY} =~ .*[0-9]  ]] && Num=${REPLY#[^0-9]} && [ $Num -le $lines ] && kill $ID; break
 done
 echo $lines
 }
