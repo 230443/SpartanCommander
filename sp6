@@ -19,17 +19,17 @@ printsp()
 ID=$!
 while :
 do
-	read -n 4 -r
-	[[ ${REPLY} =~ .*[0-9]  ]] && Num=${REPLY#[^0-9]} && [ $Num -le $lines ] && kill $ID; break
+	read -n 4
+	[[ ${REPLY} =~ .*[0-9]  ]] && Num=${REPLY#[^0-9]} && [ $Num -le $lines ] && kill $ID && break
 done
 echo $lines
 }
 
 open()
 {
-fname=$(ls -la | awk 'NR==$Num {print $9}')
-[ -f $fname ] && $($fname)
+	fname=$(ls -la | awk -v Num=$(( $Num+1 )) 'NR==$Num {print $9}')
+[ -f $fname ] && $($fname) || [ -d $fname ] && printsp $filename
 }
-printsp
-
+printsp $1
+open
 
