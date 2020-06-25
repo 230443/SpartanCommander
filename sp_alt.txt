@@ -1,0 +1,48 @@
+trap "printsp" SIGTTIN
+
+case $argument in
+
+	q)
+	quit()
+	;;
+
+	+)
+	[ $diff -gt 0 ] && [ $x -le $diff ] && ((x++)) 
+	;;
+
+	-)
+	[ $x -gt 1 ] && ((x--)) 
+	;;
+
+	$)
+	[ $diff -gt 0 ] && x=$(( $diff + 1)) 
+	;;
+
+	^)
+	x=1 
+	;;
+	
+	[0-9])//sczytywanie plików
+	execute()
+	;;
+	
+	*)
+	echo -n "Command not recognized"
+	;;
+
+trap SIGTTIN
+
+
+quit()
+{
+exit 0
+
+}
+execute()
+{
+echo -n $REPLY
+read num
+num=$REPLY$num
+name=$(echo "$list" | awk -v num=$num 'NR==num {printf $6}')
+[ -d $name ] && createList $name  || [ -x $name ] && $(./$name)
+}
